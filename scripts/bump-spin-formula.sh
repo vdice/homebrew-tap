@@ -20,7 +20,7 @@ if [[ $VERSION != v* ]]; then
 fi
 
 # Get the checksum file for the release
-wget -qO checksums.txt "https://github.com/fermyon/spin/releases/download/$VERSION/checksums-$VERSION.txt"
+wget -qO checksums.txt "https://github.com/vdice/spin/releases/download/$VERSION/checksums-$VERSION.txt"
 
 # Check if failed to download the checksum file
 if [ $? -ne 0 ]; then
