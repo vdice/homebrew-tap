@@ -1,7 +1,7 @@
 #!/bin/bash
 
 VERSION=$1
-FORMULA=${2:-Formula/Spin.rb}
+FORMULA=${2:-Formula/spin.rb}
 
 usage() {
     echo "Usage: $0 <VERSION> [<FORMULA_PATH>]"
