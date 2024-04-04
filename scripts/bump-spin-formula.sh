@@ -1,7 +1,14 @@
 #!/bin/bash
+set -eoux pipefail
 
 VERSION=$1
-FORMULA=${2:-Formula/Spin.rb}
+FORMULA=${2:-Formula/spin.rb}
+
+# -i syntax differs between GNU and Mac sed; this usage is supported by both
+SED_INPLACE='sed -i.bak'
+
+# cleanup
+trap 'rm checksums.txt **/*.bak' EXIT
 
 usage() {
     echo "Usage: $0 <VERSION> [<FORMULA_PATH>]"
@@ -30,17 +37,15 @@ fi
 
 # Remove the 'v' prefix from the version
 ERSION="${VERSION:1}"
-sed -i '' -e "s/version \"[^\"]*\"/version \"$ERSION\"/" $FORMULA
+$SED_INPLACE -e "s/version \"[^\"]*\"/version \"$ERSION\"/" $FORMULA
 # Update the sha256 checksums for each OS/Arch
 while read -r line; do
     filename=$(echo "$line" | awk '{print $2}')
     sha256=$(echo "$line" | awk '{print $1}')
-    os_arch="${filename:12}"
+    os_arch=$(echo ${filename} | sed "s/spin-v${ERSION}-//g")
     if grep -q "$os_arch" $FORMULA; then
-    sed -i '' -E "/url \".*$os_arch\"/ { n; s/sha256 \"[^\"]*\"/sha256 \"$sha256\"/; }" $FORMULA
+        $SED_INPLACE -E "/url \".*$os_arch\"/ { n; s/sha256 \"[^\"]*\"/sha256 \"$sha256\"/; }" $FORMULA
     fi
 done < checksums.txt
-
-rm checksums.txt
 
 echo "Formula updated to version $VERSION with new checksums."
