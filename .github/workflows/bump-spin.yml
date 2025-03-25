@@ -36,3 +36,4 @@ jobs:
           committer: fermybot <103076628+fermybot@users.noreply.github.com>
           author: fermybot <103076628+fermybot@users.noreply.github.com>
           signoff: true
+          token: ${{ secrets.PAT }}
